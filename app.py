@@ -3,67 +3,37 @@ import streamlit as st
 from playlist_generator import generate_playlist
 from color_palette import generate_palette
 
-#import spotipy
-#from spotipy.oauth2 import SpotifyOAuth
-
 st.title("Moodify: Immerse Yourself in Music")
 
 def main():
-    input = get_user_input()
+    mood = st.text_input("Enter your mood (e.g., chill evening, study grind):")
 
-    # add a carousel to show the playlist
-    # build playlist in playlist_generator.py
-    playlist = generate_playlist(input)
-    st.write("Generated Playlist:")
-    st.write(playlist)
+    if st.button("Generate Playlist & Palette"):
+        playlist = generate_playlist(mood)
+        palette = generate_palette(playlist)
+        
+        st.subheader("🎧 Your Playlist")
+        for song in playlist:
+            st.write(f"{song['name']} by {song['artist']}")
+        
+        st.subheader("🎨 Mood Palette")
+        st.image(palette)
 
-    # add a carousel to show the color palette
-    # build playlist in color_palette.py
-    colors = generate_palette(playlist)
-    st.write("Asspciated Colors:")
-    st.write(colors)
-    st.image(colors, width=100)
-    
-
-
-def get_user_input():
-    return input("How are you feeling today? ")
-
-
-
-"""
-def main():
-    # Spotify API authenticatio
-    sp = spotipy.Spotify(auth_manager=SpotifyOAuth(
-        client_id="your_client_id",
-        client_secret="your_client_secret",
-        redirect_uri="http://localhost:8888/callback",
-        scope="playlist-modify-public"
-    ))
-
-    # Get user input
-    user_input = get_user_input()
-
-    # Generate playlist
-    
-    # Generate color palette
-    
-
-
-def generate_playlist(sp, user_input):
-    # Generate a playlist based on user input using Spotify API.
-    # Placeholder for playlist generation logic
-    print(f"Generating playlist for you! ")
-    # Example: Search for tracks or create a playlist
-    results = sp.search(q=user_input, type='track', limit=10)
-    tracks = [track['name'] for track in results['tracks']['items']]
-    return tracks
-
-def generate_color_palette(playlist):
-    # Generate a color palette based on the playlist.
-    # Placeholder for color palette generation logic
-    print(f"Generating color palette for playlist: {playlist}")
-    # Example: Map songs to colors (this is just a stub)
-    return ["#FF5733", "#33FF57", "#3357FF"]
-
-"""
+        # give option to save playlist to Spotify
+        if st.button("Save Playlist to Spotify"):
+            st.info("Feature coming soon!")
+            # Uncomment and implement the following code to enable Spotify saving functionality
+            """
+            sp = spotipy.Spotify(auth_manager=SpotifyOAuth(
+                client_id='YOUR_CLIENT_ID',
+                client_secret='YOUR_CLIENT_SECRET',
+                redirect_uri='YOUR_REDIRECT_URI',
+                scope='playlist-modify-public'
+            ))
+            user_id = sp.current_user()['id']
+            playlist_name = f"Moodify: {mood}"
+            new_playlist = sp.user_playlist_create(user_id, playlist_name)
+            track_uris = [song['uri'] for song in playlist]
+            sp.playlist_add_items(new_playlist['id'], track_uris)
+            st.success(f"Playlist '{playlist_name}' saved to your Spotify account!")
+            """
