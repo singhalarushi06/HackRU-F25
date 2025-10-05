@@ -3,6 +3,7 @@ import streamlit as st
 from playlist_generator import generate_playlist
 from color_palette import generate_palette
 
+st.set_page_config(page_title="Moodify", page_icon="🎧", layout="centered")
 st.title("Moodify: Immerse Yourself in Music")
 
 def main():
@@ -14,10 +15,10 @@ def main():
         
         st.subheader("🎧 Your Playlist")
         for song in playlist:
-            st.write(f"{song['name']} by {song['artist']}")
-        
+            st.markdown(f"**{song['name']}** — {song['artist']}  \n[Open in Spotify]({song['url']})")
+
         st.subheader("🎨 Mood Palette")
-        st.image(palette)
+        st.image(palette, caption="Generated from your playlist")
 
         # give option to save playlist to Spotify
         if st.button("Save Playlist to Spotify"):
